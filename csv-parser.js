@@ -5,6 +5,22 @@ module.exports = {
     processCsv: processCsv
 }
 
+function csvToArray(text) {
+    let p = '', row = [''], ret = [row], i = 0, r = 0, s = !0, l;
+    for (l of text) {
+        if ('"' === l) {
+            if (s && l === p) row[i] += l;
+            s = !s;
+        } else if (Config.csvFieldSeparator === l && s) l = row[++i] = '';
+        else if ('\n' === l && s) {
+            if ('\r' === p) row[i] = row[i].slice(0, -1);
+            row = ret[++r] = [l = '']; i = 0;
+        } else row[i] += l;
+        p = l;
+    }
+    return ret;
+};
+
 function processCsv(fileContents) {
     if (!fileContents) {
         return {};
@@ -31,7 +47,7 @@ function processCsv(fileContents) {
             }
         }
         
-        var translations = results[1].split(Config.csvFieldSeparator);
+        var translations = fileContents(results[1])//.split(Config.csvFieldSeparator);
         var nss = translations[0].slice(0, translations[0].lastIndexOf('.')).split('.');
         var id = translations[0].slice(translations[0].lastIndexOf('.') + 1);
         translations.shift();
