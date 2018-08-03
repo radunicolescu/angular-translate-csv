@@ -47,7 +47,7 @@ function processCsv(fileContents) {
             }
         }
         
-        var translations = fileContents(results[1])//.split(Config.csvFieldSeparator);
+        var translations = csvToArray(results[1])//.split(Config.csvFieldSeparator);
         var nss = translations[0].slice(0, translations[0].lastIndexOf('.')).split('.');
         var id = translations[0].slice(translations[0].lastIndexOf('.') + 1);
         translations.shift();
